@@ -14,21 +14,34 @@ import '../css/geol.css';
 
 // TODO:: Import KML
 
-export class Map extends React.Component<any, any> {
+interface Props {
+  lon: number,
+  lat: number,
+  zoom: number
+};
 
+interface State {
+  center: number[]
+  zoom: number
+};
 
-  constructor(props) {
-    super(props);
+export class GenerateMap extends React.Component<Props, State> {
 
-    this.state = {
-      center: [63.4281195,-20.2885533],
-      zoom: 13
-    };
-    console.log(ol)
+  static defaultProps: Props = {
+    lon: 0,
+    lat: 0,
+    zoom: 13
   }
 
+  state: State = {
+    center: [this.props.lon, this.props.lat],
+    zoom: this.props.zoom
+  }
+
+
   componentDidMount() {
-    let coord = [ 14.5964957,120.9445401 ].reverse();
+    let coord = this.state.center.reverse();
+    let zoom = this.state.zoom;
     let center = fromLonLat(coord);
     let featuresLayer = new VectorLayer({
       source: new Vector({
@@ -46,7 +59,7 @@ export class Map extends React.Component<any, any> {
       ],
       view: new View({
         center: center,
-        zoom: 13
+        zoom: zoom
       })
     });
   }
