@@ -4,8 +4,9 @@ import View from 'ol/View';
 import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
 import VectorLayer from 'ol/layer/Vector';
-import {Vector} from 'ol/source';
-import {fromLonLat} from 'ol/proj';
+import { Vector } from 'ol/source';
+import { fromLonLat } from 'ol/proj';
+import { usePosition } from 'use-position';
 
 import * as ol from 'ol';
 
@@ -15,8 +16,8 @@ import '../css/geol.css';
 // TODO:: Import KML
 
 interface Props {
-  lon: number,
-  lat: number,
+  longitude: number,
+  latitude: number,
   zoom: number
 };
 
@@ -25,24 +26,50 @@ interface State {
   zoom: number
 };
 
-export class GenerateMap extends React.Component<Props, State> {
+export const GenerateMap = (props) => {
+  let { latitude, longitude, error } = usePosition();
+  // if (props.longitude && props.latitude) {
+  //   latitude = props.latitude
+  //   longitude = props.longitude
+  // }
+  console.log(latitude, longitude, "ASD")
+  // React.useEffect(() => {
+  //   if (latitude && longitude && !error) {
+  //         TODO: Do something here?
+  //   }
+  // }, []);
+
+  return <Locate latitude={latitude} longitude={longitude} />
+};
+
+ class Locate extends React.Component<Props, State> {
 
   static defaultProps: Props = {
-    lon: 0,
-    lat: 0,
-    zoom: 13
+    longitude: 0,
+    latitude: 0,
+    zoom: 16
   }
 
   state: State = {
-    center: [this.props.lon, this.props.lat],
+    center: [this.props.latitude, this.props.longitude],
     zoom: this.props.zoom
   }
 
-
   componentDidMount() {
-    let coord = this.state.center.reverse();
-    let zoom = this.state.zoom;
+    this.initiateOpenLayers()
+  }
+
+  componentDidUpdate() {
+    this.initiateOpenLayers()
+  }
+
+  initiateOpenLayers() {
+    this.resetMap();
+    console.log(this.props)
+    let coord = [ this.props.longitude, this.props.latitude ];
+    let zoom = this.props.zoom;
     let center = fromLonLat(coord);
+    console.log(center)
     let featuresLayer = new VectorLayer({
       source: new Vector({
         features:[],
@@ -64,6 +91,9 @@ export class GenerateMap extends React.Component<Props, State> {
     });
   }
 
+  resetMap() {
+    document.getElementById('map').innerHTML = ""
+  }
 
   render() {
     return(
