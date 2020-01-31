@@ -8,16 +8,27 @@ import OSM from 'ol/source/OSM';
 import VectorLayer from 'ol/layer/Vector';
 import { Point, Polygon, Circle } from 'ol/geom';
 import { Vector } from 'ol/source';
-import { fromLonLat } from 'ol/proj';
-import {Icon, Style, Text, Fill, Stroke} from 'ol/style';
+import { fromLonLat, toLonLat } from 'ol/proj';
+import { Icon, Style, Text, Fill, Stroke } from 'ol/style';
 import Feature from 'ol/Feature';
 import {defaults as defaultInteractions, DragRotateAndZoom} from 'ol/interaction';
 import * as ol from 'ol';
 
+import MapOverlay from './MapOverlay'
 import '../css/ol.css';
 import '../css/geol.css';
 
 // TODO:: Import KML
+
+export const GenerateMap = (props) => {
+  let { latitude, longitude, error } = usePosition(); // This will get user's current location
+  if (props.longitude && props.latitude) {
+    latitude = props.latitude
+    longitude = props.longitude
+  }
+
+  return <Location latitude={latitude} longitude={longitude} />
+};
 
 interface Props {
   longitude: number,
@@ -28,19 +39,12 @@ interface Props {
 interface State {
   center: number[]
   zoom: number
+  showOverlay: boolean
+  overlayPos: number[]
 };
 
-export const GenerateMap = (props) => {
-  let { latitude, longitude, error } = usePosition(); // This will get user's current location
-  if (props.longitude && props.latitude) {
-    latitude = props.latitude
-    longitude = props.longitude
-  }
-
-  return <Locate latitude={latitude} longitude={longitude} />
-};
-
- class Locate extends React.Component<Props, State> {
+let map = null;
+class Location extends React.Component<Props, State> {
 
   static defaultProps: Props = {
     longitude: 0,
@@ -50,8 +54,11 @@ export const GenerateMap = (props) => {
 
   state: State = {
     center: this.getCenter(),
-    zoom: this.props.zoom
+    zoom: this.props.zoom,
+    showOverlay: false,
+    overlayPos: null
   }
+
 
   getCenter() {
     return fromLonLat([this.props.longitude, this.props.latitude])
@@ -63,7 +70,10 @@ export const GenerateMap = (props) => {
 
   componentDidUpdate(previousProps, previousState) {
     if (previousProps !== this.props)
-        this.setState({center: this.getCenter()})
+        this.setState({
+          center: this.getCenter(),
+          zoom: this.props.zoom
+        })
     this.initiateOpenLayers()
   }
 
@@ -76,7 +86,7 @@ export const GenerateMap = (props) => {
       geometry: new Circle(center, 1000),
     });
 
-    let featuresLayer = new VectorLayer({
+    let vectorsAndIcons = new VectorLayer({
       source: new Vector({
         features:[
           this.generateUserIcon(),
@@ -89,20 +99,34 @@ export const GenerateMap = (props) => {
       source: new OSM()
     })
 
-    new Map({
+    map = new Map({
       target: 'map',
       interactions: defaultInteractions().extend([
         new DragRotateAndZoom()
       ]),
       layers: [
         streetLayer,
-        featuresLayer
+        vectorsAndIcons
       ],
       view: new View({
         center: center,
         zoom: zoom
       })
     });
+
+    map.on('singleclick', this.handleMapClick.bind(this))
+
+  }
+
+  handleMapClick(e) {
+    let coord = e.coordinate;
+    var iconFeatureA = map.getFeaturesAtPixel(e.pixel);
+    console.log(iconFeatureA[0].values_.name)
+
+    this.setState({
+      showOverlay: true,
+      overlayPos: e.pixel
+    })
   }
 
 
@@ -111,9 +135,7 @@ export const GenerateMap = (props) => {
 
     const userIcon = new Feature({
       geometry: new Point(center),
-      name: 'Null Island',
-      population: 4000,
-      rainfall: 500
+      name: 'UserIcon',
     });
 
     const userIconStyle = new Style({
@@ -142,7 +164,7 @@ export const GenerateMap = (props) => {
 
     userIcon.setStyle(userIconStyle);
     return userIcon
-}
+  }
 
   resetMap() {
     document.getElementById('map').innerHTML = ""
@@ -150,8 +172,11 @@ export const GenerateMap = (props) => {
 
   render() {
     return(
-      <div id="map" className="map">
-      </div>
+      <React.Fragment>
+        <div id="map" className="map">
+        </div>
+        <MapOverlay content="asdasd" position={this.state.overlayPos}></MapOverlay>
+      </React.Fragment>
     )
   }
 }
