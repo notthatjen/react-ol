@@ -41,6 +41,9 @@ interface State {
   zoom: number
   showOverlay: boolean
   overlayPos: number[]
+  focus: number[]
+  width: number
+  height: number
 };
 
 let map = null;
@@ -56,23 +59,24 @@ class Location extends React.Component<Props, State> {
     center: this.getCenter(),
     zoom: this.props.zoom,
     showOverlay: false,
-    overlayPos: null
+    overlayPos: null,
+    focus: null,
+    width: 700,
+    height: 500
   }
-
 
   getCenter() {
     return fromLonLat([this.props.longitude, this.props.latitude])
   }
 
   componentDidMount() {
-    // this.initiateOpenLayers()
   }
 
   componentDidUpdate(previousProps, previousState) {
     if (previousProps !== this.props)
         this.setState({
           center: this.getCenter(),
-          zoom: this.props.zoom
+          zoom: this.props.zoom,
         })
     this.initiateOpenLayers()
   }
@@ -80,7 +84,7 @@ class Location extends React.Component<Props, State> {
   initiateOpenLayers() {
     this.resetMap();
     console.log(this.state)
-    const { center, zoom } = this.state;
+    const { center, zoom, focus } = this.state;
 
     const circle = new Feature({
       geometry: new Circle(center, 1000),
@@ -109,7 +113,7 @@ class Location extends React.Component<Props, State> {
         vectorsAndIcons
       ],
       view: new View({
-        center: center,
+        center: focus || center,
         zoom: zoom
       })
     });
@@ -120,15 +124,23 @@ class Location extends React.Component<Props, State> {
 
   handleMapClick(e) {
     let coord = e.coordinate;
-    var iconFeatureA = map.getFeaturesAtPixel(e.pixel);
-    console.log(iconFeatureA[0].values_.name)
+    let iconFeatureA = map.getFeaturesAtPixel(e.pixel);
+    const { width, height } = this.state
+    console.log(e)
 
+    this.handleOverlayClose();
     this.setState({
       showOverlay: true,
-      overlayPos: e.pixel
+      overlayPos:  [width/2 + 100, height - (height - 30)],
+      focus: coord
     })
   }
 
+  handleOverlayClose() {
+    this.setState({
+      showOverlay: false
+    })
+  }
 
   generateUserIcon() {
     const { center } = this.state
@@ -170,12 +182,20 @@ class Location extends React.Component<Props, State> {
     document.getElementById('map').innerHTML = ""
   }
 
+  mapStyles() {
+
+    return {
+      height: this.state.height,
+      width: this.state.width
+    }
+  }
+
   render() {
     return(
       <React.Fragment>
-        <div id="map" className="map">
+        <div id="map" className="map" style={this.mapStyles()}>
         </div>
-        <MapOverlay content="asdasd" position={this.state.overlayPos}></MapOverlay>
+        <MapOverlay content="asdasd" hidden={!this.state.showOverlay} position={this.state.overlayPos} handleClose={this.handleOverlayClose.bind(this)}></MapOverlay>
       </React.Fragment>
     )
   }

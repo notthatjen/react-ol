@@ -4,6 +4,6 @@ import * as ReactDOM from "react-dom";
 import { GenerateMap } from "./components/GenerateMap";
 
 ReactDOM.render(
-    <GenerateMap />,
+    <GenerateMap  />,
     document.getElementById("root")
 );
