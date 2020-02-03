@@ -1,9 +1,9 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 
-import { GenerateMap } from "./components/GenerateMap";
+import Development from "./components/Development";
 
 ReactDOM.render(
-    <GenerateMap  />,
+    <Development  />,
     document.getElementById("root")
 );

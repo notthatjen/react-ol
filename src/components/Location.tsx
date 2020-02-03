@@ -1,6 +1,4 @@
 import * as React from "react";
-import { usePosition } from 'use-position';
-
 import Map from 'ol/Map';
 import View from 'ol/View';
 import TileLayer from 'ol/layer/Tile';
@@ -12,24 +10,8 @@ import { fromLonLat, toLonLat } from 'ol/proj';
 import { Icon, Style, Text, Fill, Stroke } from 'ol/style';
 import Feature from 'ol/Feature';
 import {defaults as defaultInteractions, DragRotateAndZoom} from 'ol/interaction';
-import * as ol from 'ol';
 
 import MapOverlay from './MapOverlay'
-import '../css/ol.css';
-import '../css/geol.css';
-
-// TODO:: Import KML
-
-export const GenerateMap = (props) => {
-  let { latitude, longitude, error } = usePosition(); // This will get user's current location
-  if (props.longitude && props.latitude) {
-    latitude = props.latitude
-    longitude = props.longitude
-  }
-
-  return <Location latitude={latitude} longitude={longitude} />
-};
-
 interface Props {
   longitude: number,
   latitude: number,
@@ -47,7 +29,7 @@ interface State {
 };
 
 let map = null;
-class Location extends React.Component<Props, State> {
+export default class Location extends React.Component<Props, State> {
 
   static defaultProps: Props = {
     longitude: 0,
@@ -70,6 +52,7 @@ class Location extends React.Component<Props, State> {
   }
 
   componentDidMount() {
+    console.log("asd")
   }
 
   componentDidUpdate(previousProps, previousState) {
@@ -83,34 +66,33 @@ class Location extends React.Component<Props, State> {
 
   initiateOpenLayers() {
     this.resetMap();
-    console.log(this.state)
     const { center, zoom, focus } = this.state;
 
-    const circle = new Feature({
-      geometry: new Circle(center, 1000),
-    });
+    // const circle = new Feature({
+    //   geometry: new Circle(center, 1000),
+    // });
 
-    let vectorsAndIcons = new VectorLayer({
-      source: new Vector({
-        features:[
-          this.generateUserIcon(),
-          circle
-        ],
-      })
-    });
+    // let vectorsAndIcons = new VectorLayer({
+    //   source: new Vector({
+    //     features:[
+    //       this.generateUserIcon(),
+    //       circle
+    //     ],
+    //   })
+    // });
 
     let streetLayer = new TileLayer({
       source: new OSM()
     })
 
     map = new Map({
-      target: 'map',
+      target: 'l-api-map',
       interactions: defaultInteractions().extend([
         new DragRotateAndZoom()
       ]),
       layers: [
         streetLayer,
-        vectorsAndIcons
+        // vectorsAndIcons
       ],
       view: new View({
         center: focus || center,
@@ -179,7 +161,7 @@ class Location extends React.Component<Props, State> {
   }
 
   resetMap() {
-    document.getElementById('map').innerHTML = ""
+    document.getElementById('l-api-map').innerHTML = ""
   }
 
   mapStyles() {
@@ -193,9 +175,10 @@ class Location extends React.Component<Props, State> {
   render() {
     return(
       <React.Fragment>
-        <div id="map" className="map" style={this.mapStyles()}>
+        <div id="l-api-map" className="l-api-map" style={this.mapStyles()}>
         </div>
         <MapOverlay content="asdasd" hidden={!this.state.showOverlay} position={this.state.overlayPos} handleClose={this.handleOverlayClose.bind(this)}></MapOverlay>
+        {this.props.children}
       </React.Fragment>
     )
   }
