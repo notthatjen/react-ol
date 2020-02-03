@@ -1,17 +1,7 @@
 # Location API
   No description yet
 
-### System dependencies 👇
-* Typescript
-* React
-* npm or yarn
-
-
-### Development Guide ⚙️
-```
-    ➜ yarn start
-```
+# Installation
+```npm install location-api```
 or
-```
-    ➜ npm start
-```
+```yarn add location-apo```
