@@ -4,4 +4,4 @@
 # Installation
 ```npm install location-api```
 or
-```yarn add location-apo```
+```yarn add location-api```
