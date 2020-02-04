@@ -1,89 +1,146 @@
-import * as React from "react";
 import { Icon, Style, Text, Fill, Stroke } from 'ol/style';
 import { Polygon, Circle } from 'ol/geom';
-import * as ol from 'ol';
+import * as geom from 'ol/geom';
 import Feature from 'ol/Feature';
 import { fromLonLat, toLonLat } from 'ol/proj';
-import { usePosition } from 'use-position';
 
-function generateUserIcon(props) {
-  const { center } = props.center
 
-  const userIcon = new Feature({
-    geometry: new ol.point(center),
-    name: 'UserIcon',
-  });
+    // const circle = new Feature({
+    //   geometry: new Circle(center, 1000),
+    // });
 
-  const userIconStyle = new Style({
-    image: new Icon({
-      anchor: [0.5, 46],
-      anchorXUnits: 'fraction',
-      anchorYUnits: 'pixels',
-      src: '/src/images/user-icon.png'
-    }),
-    text: new Text({
-      text: "This is you",
-      offsetY: -60,
-      font: 'bold 14px sans-serif',
-      padding: [5, 5, 5, 5],
-      backgroundStroke: new Stroke({
-        lineJoin: 'round',
-      }),
-      fill: new Fill({
-          color: '#000'
-      }),
-      backgroundFill: new Fill({
-        color: '#FA9B00'
-      })
-    })
-  });
+    // let vectorsAndIcons = new VectorLayer({
+    //   source: new Vector({
+    //     features:[
+    //       this.generateUserIcon(),
+    //       circle
+    //     ],
+    //   })
+    // });
 
-  userIcon.setStyle(userIconStyle);
-  return userIcon
+// function generateUserIcon(props) {
+//   const { center } = props.center
+
+//   const userIcon = new Feature({
+//     geometry: new ol.point(center),
+//     name: 'UserIcon',
+//   });
+
+//   const userIconStyle = new Style({
+//     image: new Icon({
+//       anchor: [0.5, 46],
+//       anchorXUnits: 'fraction',
+//       anchorYUnits: 'pixels',
+//       src: '/src/images/user-icon.png'
+//     }),
+//     text: new Text({
+//       text: "This is you",
+//       offsetY: -60,
+//       font: 'bold 14px sans-serif',
+//       padding: [5, 5, 5, 5],
+//       backgroundStroke: new Stroke({
+//         lineJoin: 'round',
+//       }),
+//       fill: new Fill({
+//           color: '#000'
+//       }),
+//       backgroundFill: new Fill({
+//         color: '#FA9B00'
+//       })
+//     })
+//   });
+
+//   userIcon.setStyle(userIconStyle);
+//   return userIcon
+// }
+
+interface PointInterface {
+  longitude:           number
+  latitude:            number
+  center:              boolean
+  defaultCenter:       number[]
 }
 
-export const Point = (props) => {
+export default class Point {
+  private props: PointInterface
+  constructor(props) {
 
-  return <PointConfig  {...usePosition()} {...props} />
+    this.props = props
+    return this.setPoint()
+  }
+
+  private coords() {
+    let { defaultCenter, longitude, latitude } = this.props
+    let lonLat = [ longitude, latitude ]
+    if (defaultCenter) return defaultCenter
+    return fromLonLat(lonLat)
+  }
+
+  setPoint() {
+    let center = this.coords();
+    console.log(center)
+    if (center) {
+      const point = new Feature({
+        geometry: new geom.Point(center),
+        name: 'UserIcon',
+      });
+
+      const icon = new Style({
+        image: new Icon({
+          anchor: [0.5, 46],
+          anchorXUnits: 'fraction',
+          anchorYUnits: 'pixels',
+          src: '/src/images/user-icon.png'
+        }),
+        text: new Text({
+          text: "This is you",
+          offsetY: -60,
+          font: 'bold 14px sans-serif',
+          padding: [5, 5, 5, 5],
+          backgroundStroke: new Stroke({
+            lineJoin: 'round',
+          }),
+          fill: new Fill({
+              color: '#000'
+          }),
+          backgroundFill: new Fill({
+            color: '#FA9B00'
+          })
+        })
+      });
+
+      point.setStyle(icon);
+      return point
+    }
+  }
 }
 
-interface State {
-  center: number[]
-  zoom: number
-  // showOverlay: boolean
-  // overlayPos: number[]
-  // focus: number[]
-  // width: number
-  // height: number
-};
 
-class PointConfig extends React.Component<any,State> {
-
-  state: State = {
-    center: this.getCenter(),
-    zoom: this.props.zoom,
+  // state = {
+  //   point: this.getCenter(),
+  //   zoom: this.props.zoom,
     // showOverlay: false,
     // overlayPos: null,
     // focus: null,
     // width: 700,
     // height: 500
-  }
+  // }
 
-  componentDidUpdate(previousProps, previousState) {
-    if (previousProps !== this.props)
-        this.setState({
-          center: this.getCenter(),
-          zoom: this.props.zoom,
-        })
-  }
+  // componentDidUpdate(previousProps, previousState) {
+  //   if (previousProps !== this.props)
+  //       this.setState({
+  //         center: this.getCenter(),
+  //         zoom: this.props.zoom,
+  //       })
+  // }
 
 
-  getCenter() {
-    return fromLonLat([this.props.longitude, this.props.latitude])
-  }
+  // getCenter() {
+  //   let lonLat = this.props.currentLocation ? this.props.defaultCenter : [this.props.longitude, this.props.latitude]
+  //   return fromLonLat(lonLat)
+  // }
 
-  render() {
-    console.log(this.state.center)
-    return("hi")
-  }
-}
+  // render() {
+  //   console.log(this.state.point)
+  //   return("hi")
+  // }

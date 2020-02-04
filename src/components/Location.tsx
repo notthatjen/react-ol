@@ -4,51 +4,50 @@ import View from 'ol/View';
 import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
 import VectorLayer from 'ol/layer/Vector';
-import { Point, Polygon, Circle } from 'ol/geom';
+import * as geom from 'ol/geom';
 import { Vector } from 'ol/source';
 import { fromLonLat, toLonLat } from 'ol/proj';
 import { Icon, Style, Text, Fill, Stroke } from 'ol/style';
 import Feature from 'ol/Feature';
 import {defaults as defaultInteractions, DragRotateAndZoom} from 'ol/interaction';
+import Point from './Point'
 
 import MapOverlay from './MapOverlay'
 interface Props {
-  longitude: number,
-  latitude: number,
-  zoom: number
+  defaultCenter: any
+  zoom:          number
 };
 
 interface State {
-  center: number[]
-  zoom: number
+  center:      number[]
+  zoom:        number
   showOverlay: boolean
-  overlayPos: number[]
-  focus: number[]
-  width: number
-  height: number
+  overlayPos:  number[]
+  focus:       number[]
+  width:       number
+  height:      number
 };
 
 let map = null;
 export default class Location extends React.Component<Props, State> {
 
   static defaultProps: Props = {
-    longitude: 0,
-    latitude: 0,
-    zoom: 16
+    defaultCenter: [0,0],
+    zoom: 13
   }
 
   state: State = {
-    center: this.getCenter(),
+    center: null,
     zoom: this.props.zoom,
     showOverlay: false,
     overlayPos: null,
-    focus: null,
+    focus: this.getCenter(this.props.defaultCenter),
     width: 700,
     height: 500
   }
 
-  getCenter() {
-    return fromLonLat([this.props.longitude, this.props.latitude])
+  getCenter(lonLat) {
+    return fromLonLat(lonLat)
   }
 
   componentDidMount() {
@@ -58,7 +57,7 @@ export default class Location extends React.Component<Props, State> {
   componentDidUpdate(previousProps, previousState) {
     if (previousProps !== this.props)
         this.setState({
-          center: this.getCenter(),
+          focus: this.getCenter(this.props.defaultCenter),
           zoom: this.props.zoom,
         })
     this.initiateOpenLayers()
@@ -68,21 +67,21 @@ export default class Location extends React.Component<Props, State> {
     this.resetMap();
     const { center, zoom, focus } = this.state;
 
-    // const circle = new Feature({
-    //   geometry: new Circle(center, 1000),
-    // });
-
-    // let vectorsAndIcons = new VectorLayer({
-    //   source: new Vector({
-    //     features:[
-    //       this.generateUserIcon(),
-    //       circle
-    //     ],
-    //   })
-    // });
-
     let streetLayer = new TileLayer({
       source: new OSM()
+    })
+
+    let point = new Point({
+      center: true,
+      defaultCenter: focus
+    }) || null
+
+    let vectorsAndIcons = new VectorLayer({
+      source: new Vector({
+        features: [
+          point
+        ]
+      })
     })
 
     map = new Map({
@@ -92,10 +91,10 @@ export default class Location extends React.Component<Props, State> {
       ]),
       layers: [
         streetLayer,
-        // vectorsAndIcons
+        vectorsAndIcons
       ],
       view: new View({
-        center: focus || center,
+        center: center || focus,
         zoom: zoom
       })
     });
@@ -125,10 +124,10 @@ export default class Location extends React.Component<Props, State> {
   }
 
   generateUserIcon() {
-    const { center } = this.state
+    const { focus } = this.state
 
     const userIcon = new Feature({
-      geometry: new Point(center),
+      geometry: new geom.Point(focus),
       name: 'UserIcon',
     });
 
@@ -177,7 +176,7 @@ export default class Location extends React.Component<Props, State> {
       <React.Fragment>
         <div id="l-api-map" className="l-api-map" style={this.mapStyles()}>
         </div>
-        <MapOverlay content="asdasd" hidden={!this.state.showOverlay} position={this.state.overlayPos} handleClose={this.handleOverlayClose.bind(this)}></MapOverlay>
+        {/* <MapOverlay content="asdasd" hidden={!this.state.showOverlay} position={this.state.overlayPos} handleClose={this.handleOverlayClose.bind(this)}></MapOverlay> */}
         {this.props.children}
       </React.Fragment>
     )
