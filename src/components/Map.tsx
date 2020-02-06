@@ -11,6 +11,8 @@ export const Map = (props) => {
   let { longitude, latitude, error } = usePosition();
 
   return(
-    <Location defaultCenter={!error && [longitude, latitude]} />
+    <Location defaultCenter={!error && [longitude, latitude]}>
+      asd
+    </Location>
   )
 };

@@ -10,7 +10,7 @@ import { fromLonLat, toLonLat } from 'ol/proj';
 import { Icon, Style, Text, Fill, Stroke } from 'ol/style';
 import Feature from 'ol/Feature';
 import {defaults as defaultInteractions, DragRotateAndZoom} from 'ol/interaction';
-import Point from './Point'
+import * as actions from '../actions'
 
 import MapOverlay from './MapOverlay'
 interface Props {
@@ -30,7 +30,6 @@ interface State {
 
 let map = null;
 export default class Location extends React.Component<Props, State> {
-
   static defaultProps: Props = {
     defaultCenter: [0,0],
     zoom: 13
@@ -51,7 +50,6 @@ export default class Location extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    console.log("asd")
   }
 
   componentDidUpdate(previousProps, previousState) {
@@ -71,11 +69,12 @@ export default class Location extends React.Component<Props, State> {
       source: new OSM()
     })
 
-    let point = new Point({
+    let point = new actions.Point({
       center: true,
       defaultCenter: focus
     }) || null
 
+    console.log(this.props.children)
     let vectorsAndIcons = new VectorLayer({
       source: new Vector({
         features: [
@@ -100,7 +99,6 @@ export default class Location extends React.Component<Props, State> {
     });
 
     map.on('singleclick', this.handleMapClick.bind(this))
-
   }
 
   handleMapClick(e) {
@@ -123,42 +121,6 @@ export default class Location extends React.Component<Props, State> {
     })
   }
 
-  generateUserIcon() {
-    const { focus } = this.state
-
-    const userIcon = new Feature({
-      geometry: new geom.Point(focus),
-      name: 'UserIcon',
-    });
-
-    const userIconStyle = new Style({
-      image: new Icon({
-        anchor: [0.5, 46],
-        anchorXUnits: 'fraction',
-        anchorYUnits: 'pixels',
-        src: '/src/images/user-icon.png'
-      }),
-      text: new Text({
-        text: "This is you",
-        offsetY: -60,
-        font: 'bold 14px sans-serif',
-        padding: [5, 5, 5, 5],
-        backgroundStroke: new Stroke({
-          lineJoin: 'round',
-        }),
-        fill: new Fill({
-            color: '#000'
-        }),
-        backgroundFill: new Fill({
-          color: '#FA9B00'
-        })
-      })
-    });
-
-    userIcon.setStyle(userIconStyle);
-    return userIcon
-  }
-
   resetMap() {
     document.getElementById('l-api-map').innerHTML = ""
   }
@@ -177,7 +139,6 @@ export default class Location extends React.Component<Props, State> {
         <div id="l-api-map" className="l-api-map" style={this.mapStyles()}>
         </div>
         {/* <MapOverlay content="asdasd" hidden={!this.state.showOverlay} position={this.state.overlayPos} handleClose={this.handleOverlayClose.bind(this)}></MapOverlay> */}
-        {this.props.children}
       </React.Fragment>
     )
   }
