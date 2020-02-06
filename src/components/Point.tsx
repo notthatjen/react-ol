@@ -6,7 +6,6 @@ class Point extends React.Component<any, any> {
 
   }
 
-
   render() {
     return(
       <React.Fragment>

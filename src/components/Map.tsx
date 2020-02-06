@@ -5,14 +5,20 @@ import { usePosition } from 'use-position';
 import '../css/ol.css';
 import '../css/geol.css';
 
-// TODO:: Import KML
+interface Props {
+  zoom: number
+  center: number[]
+  children: React.ReactNode
+}
 
-export const Map = (props) => {
+const Map: React.FunctionComponent = (props: Props) => {
   let { longitude, latitude, error } = usePosition();
 
   return(
     <Location defaultCenter={!error && [longitude, latitude]}>
-      asd
+      {props.children}
     </Location>
   )
 };
+
+export default Map;

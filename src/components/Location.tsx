@@ -4,11 +4,8 @@ import View from 'ol/View';
 import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
 import VectorLayer from 'ol/layer/Vector';
-import * as geom from 'ol/geom';
 import { Vector } from 'ol/source';
-import { fromLonLat, toLonLat } from 'ol/proj';
-import { Icon, Style, Text, Fill, Stroke } from 'ol/style';
-import Feature from 'ol/Feature';
+import { fromLonLat } from 'ol/proj';
 import {defaults as defaultInteractions, DragRotateAndZoom} from 'ol/interaction';
 import * as actions from '../actions'
 
