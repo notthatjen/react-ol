@@ -25,7 +25,6 @@ interface State {
   height:      number
 };
 
-let map = null;
 export default class Location extends React.Component<Props, State> {
   static defaultProps: Props = {
     defaultCenter: [0,0],
@@ -42,13 +41,38 @@ export default class Location extends React.Component<Props, State> {
     height: 500
   }
 
+  map: Map;
+  points: any[] = [];
+
   getCenter(lonLat) {
     return fromLonLat(lonLat)
   }
 
-  componentDidMount() {
-    console.log("hel", this.props.children)
+  // componentDidMount() {
+  //   this.parseChildren()
+  // }
 
+  // parseChildren() {
+  //   let { children } = this.props;
+  //   React.Children.map(children, (child: any) => {
+  //     if (!child.type) return // Ignore non react elements
+
+  //     switch( child.type.name ) {
+  //       case "Point":
+  //         this.points.push(child)
+  //         break;
+  //     }
+  //   })
+
+  //   this.handlePointElements()
+  // }
+
+  handlePointElements() {
+    let points = this.points
+
+    points.map( point => {
+
+    })
   }
 
   componentDidUpdate(previousProps, previousState) {
@@ -74,7 +98,6 @@ export default class Location extends React.Component<Props, State> {
       icon: 'User'
     }) || null
 
-    console.log(this.props.children)
     let vectorsAndIcons = new VectorLayer({
       source: new Vector({
         features: [
@@ -83,7 +106,7 @@ export default class Location extends React.Component<Props, State> {
       })
     })
 
-    map = new Map({
+    this.map = new Map({
       target: 'l-api-map',
       interactions: defaultInteractions().extend([
         new DragRotateAndZoom()
@@ -98,12 +121,12 @@ export default class Location extends React.Component<Props, State> {
       })
     });
 
-    map.on('singleclick', this.handleMapClick.bind(this))
+    this.map.on('singleclick', this.handleMapClick.bind(this))
   }
 
   handleMapClick(e) {
     let coord = e.coordinate;
-    let iconFeatureA = map.getFeaturesAtPixel(e.pixel);
+    let iconFeatureA = this.map.getFeaturesAtPixel(e.pixel);
     const { width, height } = this.state
     console.log(e)
 

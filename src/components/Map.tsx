@@ -11,14 +11,30 @@ interface Props {
   children: React.ReactNode
 }
 
-const Map: React.FunctionComponent = (props: Props) => {
-  let { longitude, latitude, error } = usePosition();
+// const Map: React.FunctionComponent = (props: Props) => {
+//   let { longitude, latitude, error } = usePosition();
 
-  return(
-    <Location defaultCenter={!error && [longitude, latitude]}>
-      {props.children}
-    </Location>
-  )
-};
+//   return(
+//     <Location defaultCenter={!error && [longitude, latitude]}>
+//       {props.children}
+//     </Location>
+//   )
+// };
 
-export default Map;
+
+class Map extends React.Component<Props> {
+
+  render() {
+    return <Location {...this.props} />
+  }
+}
+
+
+function usePositionWrapper(Component) {
+  return function Wrapped(props) {
+    let { longitude, latitude, error } = usePosition();
+    return <Component {...props} defaultCenter={!error && [longitude, latitude]} />
+  }
+}
+
+export default usePositionWrapper(Map);
