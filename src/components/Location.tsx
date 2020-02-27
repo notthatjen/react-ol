@@ -47,6 +47,8 @@ export default class Location extends React.Component<Props, State> {
   }
 
   componentDidMount() {
+    console.log("hel", this.props.children)
+
   }
 
   componentDidUpdate(previousProps, previousState) {
@@ -68,7 +70,8 @@ export default class Location extends React.Component<Props, State> {
 
     let point = new actions.Point({
       center: true,
-      defaultCenter: focus
+      defaultCenter: focus,
+      icon: 'User'
     }) || null
 
     console.log(this.props.children)
