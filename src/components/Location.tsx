@@ -1,168 +1,149 @@
-import * as React from "react";
-import Map from 'ol/Map';
-import View from 'ol/View';
-import TileLayer from 'ol/layer/Tile';
-import OSM from 'ol/source/OSM';
-import VectorLayer from 'ol/layer/Vector';
-import { Vector } from 'ol/source';
-import { fromLonLat } from 'ol/proj';
-import {defaults as defaultInteractions, DragRotateAndZoom} from 'ol/interaction';
-import * as actions from '../actions'
+// import * as React from "react";
+// import Map from 'ol/Map';
+// import View from 'ol/View';
+// import TileLayer from 'ol/layer/Tile';
+// import OSM from 'ol/source/OSM';
+// import VectorLayer from 'ol/layer/Vector';
+// import { Vector } from 'ol/source';
+// import { fromLonLat } from 'ol/proj';
+// import {defaults as defaultInteractions, DragRotateAndZoom} from 'ol/interaction';
+// import * as actions from '../actions'
 
-import MapOverlay from './MapOverlay'
-interface Props {
-  defaultCenter: any
-  zoom:          number
-};
+// import MapOverlay from './MapOverlay'
+// interface Props {
+//   defaultCenter: any
+//   zoom:          number
+// };
 
-interface State {
-  center:      number[]
-  zoom:        number
-  showOverlay: boolean
-  overlayPos:  number[]
-  focus:       number[]
-  width:       number
-  height:      number
-};
+// interface State {
+//   center:      number[]
+//   zoom:        number
+//   showOverlay: boolean
+//   overlayPos:  number[]
+//   focus:       number[]
+//   width:       number
+//   height:      number
+// };
 
-export default class Location extends React.Component<Props, State> {
-  static defaultProps: Props = {
-    defaultCenter: [0,0],
-    zoom: 13
-  }
+// export default class Location extends React.Component<Props, State> {
+//   static defaultProps: Props = {
+//     defaultCenter: [0,0],
+//     zoom: 13
+//   }
 
-  state: State = {
-    center: null,
-    zoom: this.props.zoom,
-    showOverlay: false,
-    overlayPos: null,
-    focus: this.getCenter(this.props.defaultCenter),
-    width: 700,
-    height: 500
-  }
+//   state: State = {
+//     center: null,
+//     zoom: this.props.zoom,
+//     showOverlay: false,
+//     overlayPos: null,
+//     focus: this.getCenter(this.props.defaultCenter),
+//     width: 700,
+//     height: 500
+//   }
 
-  map: Map;
-  points: any[] = [];
+//   map: Map;
+//   points: any[] = [];
 
-  getCenter(lonLat) {
-    return fromLonLat(lonLat)
-  }
+//   getCenter(lonLat) {
+//     return fromLonLat(lonLat)
+//   }
 
-  // componentDidMount() {
-  //   this.parseChildren()
-  // }
+//   handlePointElements() {
+//     let points = this.points
 
-  // parseChildren() {
-  //   let { children } = this.props;
-  //   React.Children.map(children, (child: any) => {
-  //     if (!child.type) return // Ignore non react elements
+//     points.map( point => {
 
-  //     switch( child.type.name ) {
-  //       case "Point":
-  //         this.points.push(child)
-  //         break;
-  //     }
-  //   })
+//     })
+//   }
 
-  //   this.handlePointElements()
-  // }
+//   componentDidUpdate(previousProps, previousState) {
+//     if (previousProps !== this.props)
+//         this.setState({
+//           focus: this.getCenter(this.props.defaultCenter),
+//           zoom: this.props.zoom,
+//         })
+//     this.initiateOpenLayers()
+//   }
 
-  handlePointElements() {
-    let points = this.points
+//   initiateOpenLayers() {
+//     this.resetMap();
+//     const { center, zoom, focus } = this.state;
 
-    points.map( point => {
+//     let streetLayer = new TileLayer({
+//       source: new OSM()
+//     })
 
-    })
-  }
+//     let point = new actions.Point({
+//       center: true,
+//       defaultCenter: focus,
+//       icon: 'User'
+//     }) || null
 
-  componentDidUpdate(previousProps, previousState) {
-    if (previousProps !== this.props)
-        this.setState({
-          focus: this.getCenter(this.props.defaultCenter),
-          zoom: this.props.zoom,
-        })
-    this.initiateOpenLayers()
-  }
+//     let vectorsAndIcons = new VectorLayer({
+//       source: new Vector({
+//         features: [
+//           ...this.props.points
+//         ]
+//       })
+//     })
 
-  initiateOpenLayers() {
-    this.resetMap();
-    const { center, zoom, focus } = this.state;
+//     this.map = new Map({
+//       target: 'l-api-map',
+//       interactions: defaultInteractions().extend([
+//         new DragRotateAndZoom()
+//       ]),
+//       layers: [
+//         streetLayer,
+//         vectorsAndIcons
+//       ],
+//       view: new View({
+//         center: center || focus,
+//         zoom: zoom
+//       })
+//     });
 
-    let streetLayer = new TileLayer({
-      source: new OSM()
-    })
+//     this.map.on('singleclick', this.handleMapClick.bind(this))
+//   }
 
-    let point = new actions.Point({
-      center: true,
-      defaultCenter: focus,
-      icon: 'User'
-    }) || null
+//   handleMapClick(e) {
+//     let coord = e.coordinate;
+//     let iconFeatureA = this.map.getFeaturesAtPixel(e.pixel);
+//     const { width, height } = this.state
+//     console.log(e)
 
-    let vectorsAndIcons = new VectorLayer({
-      source: new Vector({
-        features: [
-          point
-        ]
-      })
-    })
+//     this.handleOverlayClose();
+//     this.setState({
+//       showOverlay: true,
+//       overlayPos:  [width/2 + 100, height - (height - 30)],
+//       focus: coord
+//     })
+//   }
 
-    this.map = new Map({
-      target: 'l-api-map',
-      interactions: defaultInteractions().extend([
-        new DragRotateAndZoom()
-      ]),
-      layers: [
-        streetLayer,
-        vectorsAndIcons
-      ],
-      view: new View({
-        center: center || focus,
-        zoom: zoom
-      })
-    });
+//   handleOverlayClose() {
+//     this.setState({
+//       showOverlay: false
+//     })
+//   }
 
-    this.map.on('singleclick', this.handleMapClick.bind(this))
-  }
+//   resetMap() {
+//     document.getElementById('l-api-map').innerHTML = ""
+//   }
 
-  handleMapClick(e) {
-    let coord = e.coordinate;
-    let iconFeatureA = this.map.getFeaturesAtPixel(e.pixel);
-    const { width, height } = this.state
-    console.log(e)
+//   mapStyles() {
 
-    this.handleOverlayClose();
-    this.setState({
-      showOverlay: true,
-      overlayPos:  [width/2 + 100, height - (height - 30)],
-      focus: coord
-    })
-  }
+//     return {
+//       height: this.state.height,
+//       width: this.state.width
+//     }
+//   }
 
-  handleOverlayClose() {
-    this.setState({
-      showOverlay: false
-    })
-  }
-
-  resetMap() {
-    document.getElementById('l-api-map').innerHTML = ""
-  }
-
-  mapStyles() {
-
-    return {
-      height: this.state.height,
-      width: this.state.width
-    }
-  }
-
-  render() {
-    return(
-      <React.Fragment>
-        <div id="l-api-map" className="l-api-map" style={this.mapStyles()}>
-        </div>
-        {/* <MapOverlay content="asdasd" hidden={!this.state.showOverlay} position={this.state.overlayPos} handleClose={this.handleOverlayClose.bind(this)}></MapOverlay> */}
-      </React.Fragment>
-    )
-  }
-}
+//   render() {
+//     return(
+//       <React.Fragment>
+//         <div id="l-api-map" className="l-api-map" style={this.mapStyles()}>
+//         </div>
+//         {/* <MapOverlay content="asdasd" hidden={!this.state.showOverlay} position={this.state.overlayPos} handleClose={this.handleOverlayClose.bind(this)}></MapOverlay> */}
+//       </React.Fragment>
+//     )
+//   }
+// }

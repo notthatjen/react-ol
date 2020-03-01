@@ -7,8 +7,8 @@ export default class Development extends React.Component<any,any> {
   render() {
     return(
       <Map>
-        <Point lat={123}></Point>
-        <Point lat={321}></Point>
+        <Point center useCurrentLocation></Point>
+        <Point latitude={14.5910506} longitude={121.0598379}></Point>
       </Map>
     )
   }

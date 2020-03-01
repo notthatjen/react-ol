@@ -1,22 +1,4 @@
-.ol-popup {
-  position: absolute;
-  background-color: white;
-  padding: 15px;
-  border-radius: 10px;
-  border: 1px solid #cccccc;
-  bottom: 12px;
-  min-width: 280px;
-  height: 300px;
-  z-index: 999;
-  animation-duration: 0.5s;
-}
-
-.ol-popup-closer {
-  text-decoration: none;
-  position: absolute;
-  top: 2px;
-  right: 8px;
-}
-.ol-popup-closer:after {
-  content: "✖";
+#l-react-map {
+  width: 700px;
+  height: 500px;
 }

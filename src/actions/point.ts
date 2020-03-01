@@ -4,28 +4,18 @@ import Feature from 'ol/Feature';
 import { fromLonLat } from 'ol/proj';
 
 
-interface PointInterface {
-  longitude:           number
-  latitude:            number
-  center:              boolean
-  defaultCenter:       number[]
-  icon:                string
-}
-
 class Point {
-  private props: PointInterface
+  public points: any;
+  public center: any;
+  private defaultLocation: any;
+
   constructor(props) {
+    this.points = props.points;
+    this.defaultLocation = props.defaultLocation;
 
-    this.props = props
-    return this.setPoint()
+    this.handlePointElements()
   }
 
-  private coords() {
-    let { defaultCenter, longitude, latitude } = this.props
-    let lonLat = [ longitude, latitude ]
-    if (defaultCenter) return defaultCenter
-    return fromLonLat(lonLat)
-  }
 
   private setIcon(name) {
     // TODO: var name will identify the icon image
@@ -55,10 +45,10 @@ class Point {
     return icon
   }
 
-  setPoint() {
-    let { icon } = this.props
-    let center = this.coords();
-
+  setPoint(point) {
+    let { icon, longitude, latitude  } = point
+    let center = fromLonLat([longitude, latitude])
+    console.log(point)
     if (center) {
       const point = new Feature({
         geometry: new geom.Point(center),
@@ -71,6 +61,27 @@ class Point {
   }
 
 
+  handlePointElements() {
+    let points = this.points
+    let parsedPoints = [];
+    points.map( point => {
+      let props = point.props;
+      if (point.props.center) {
+        if (point.props.useCurrentLocation) {
+          props = {...props, ...this.defaultLocation}
+        }
+
+        this.center = fromLonLat([ props.longitude, props.latitude ])
+      }
+      parsedPoints.push(this.setPoint(props))
+    })
+
+    this.points = parsedPoints;
+
+    if (!this.center) throw new Error(
+      '404 Not Found: Center point is required e.g. <Point center />'
+    )
+  }
 
 }
 
