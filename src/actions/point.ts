@@ -1,3 +1,5 @@
+// DefaultProps are located /src/components/Point.tsx
+
 import { Icon, Style, Text, Fill, Stroke } from 'ol/style';
 import * as geom from 'ol/geom';
 import Feature from 'ol/Feature';
@@ -16,18 +18,25 @@ class Point {
     this.handlePointElements()
   }
 
+  private sanitizeLabel(label) {
+    if (label.length > 20) return label.slice(0, 20) + "..."
+    return label
+  }
 
-  private setIcon(name) {
+
+  private setIcon(point) {
+    let { icon, label } = point
+    label = this.sanitizeLabel(label)
     // TODO: var name will identify the icon image
-    const icon = new Style({
+    const feature = new Style({
       image: new Icon({
         anchor: [0.5, 46],
         anchorXUnits: 'fraction',
         anchorYUnits: 'pixels',
-        src: '/src/images/user-icon.png'
+        src: `/src/images/${icon}.png`
       }),
       text: new Text({
-        text: "This is you",
+        text: label,
         offsetY: -60,
         font: 'bold 14px sans-serif',
         padding: [5, 5, 5, 5],
@@ -42,21 +51,20 @@ class Point {
         })
       })
     });
-    return icon
+    return feature
   }
 
   setPoint(point) {
-    let { icon, longitude, latitude  } = point
+    let { longitude, latitude  } = point
     let center = fromLonLat([longitude, latitude])
-    console.log(point)
     if (center) {
-      const point = new Feature({
+      const feature = new Feature({
         geometry: new geom.Point(center),
         name: 'User',
       });
 
-      point.setStyle(this.setIcon(icon));
-      return point
+      feature.setStyle(this.setIcon(point));
+      return feature
     }
   }
 
@@ -64,7 +72,9 @@ class Point {
   handlePointElements() {
     let points = this.points
     let parsedPoints = [];
-    points.map( point => {
+
+    // Reverse to re-adjust the z-index. first element will have the highest z-index when reversed :P
+    points.reverse().map( point => {
       let props = point.props;
       if (point.props.center) {
         if (point.props.useCurrentLocation) {

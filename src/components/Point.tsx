@@ -7,16 +7,18 @@ interface Props {
   latitude:            number
   icon:                string
   useCurrentLocation:  boolean
+  label:               string
 }
 
 class Point extends React.Component<Props> {
 
   static defaultProps: Props= {
-    icon:               null,
+    icon:               'Default',
     longitude:          0,
     latitude:           0,
     center:             false,
-    useCurrentLocation: false
+    useCurrentLocation: false,
+    label: ""
   }
 
   constructor(props) {
