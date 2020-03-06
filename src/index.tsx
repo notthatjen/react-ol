@@ -1,10 +1,15 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 
-import Development from "./components/Development";
-// Todo: transfer devel to another react /app folder
-// Todo: add import routes for all module component
+import { Map, Point } from './components'
 
+
+export {
+    Map,
+    Point
+}
+
+import Development from "./components/Development";
 ReactDOM.render(
     <Development  />,
     document.getElementById("root")

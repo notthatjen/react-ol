@@ -19,5 +19,12 @@
         "src/components/*"
       ],
     }
-  }
+  },
+  "files": [
+    "src/index.tsx",
+    "node_modules/@types/openlayers/index.d.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ],
 }
