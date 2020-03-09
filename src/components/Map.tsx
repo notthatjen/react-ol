@@ -7,7 +7,7 @@ import OSM from 'ol/source/OSM';
 import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
 import { Vector } from 'ol/source';
-import {defaults as defaultInteractions, DragRotateAndZoom} from 'ol/interaction';
+import { defaults as defaultInteractions, DragRotateAndZoom } from 'ol/interaction';
 import Utils from '../utils'
 
 
@@ -17,7 +17,7 @@ import '../css/geol.css';
 function usePositionWrapper(Component) {
   return function Wrapped(props) {
     let { longitude, latitude, error } = usePosition();
-    return <Component {...props} defaultLocation={!error && {longitude, latitude}} />
+    return <Component {...props} defaultLocation={!error && { longitude, latitude }} />
   }
 }
 
@@ -31,7 +31,7 @@ class Map extends React.Component<Props> {
 
   map: ol.Map;
   points: any[] = [];
-  center: any[] = [0,0];
+  center: any[] = [0, 0];
   zoom: number = this.props.zoom || 13;
 
   componentDidMount() {
@@ -80,36 +80,14 @@ class Map extends React.Component<Props> {
 
   parseChildren() {
     // Todo: Transfer this to utils
-    let { children } = this.props;
 
-    let parsedPoints = new actions.Point({points: Utils.findChild(children, "Point"), defaultLocation: this.props.defaultLocation})
+    let children: any = Utils.findAllChild(this.props.children)
+    let parsedPoints = new actions.Point({ points: children.points, defaultLocation: this.props.defaultLocation })
+
+
     this.center = parsedPoints.center
     this.points = parsedPoints.points
-    console.log(this.points)
   }
-
-  // handlePointElements() {
-  //   let points = this.points
-  //   let parsed_points = [];
-  //   points.map( point => {
-  //     let otherProps = {};
-  //     if (point.props.center) {
-  //       let prop;
-  //       if (point.props.useCurrentLocation) {
-  //         otherProps = {...this.props.defaultLocation}
-  //         prop = this.props.defaultLocation
-  //       } else {
-  //         prop = point.props
-  //       }
-  //       this.center = fromLonLat([ prop.longitude, prop.latitude ])
-  //     }
-  //     parsed_points.push(new actions.Point({...point.props, ...otherProps}))
-  //   })
-
-  //   if (!this.center) throw new Error(
-  //     '404 Not Found: Center point is required e.g. <Point center />'
-  //   )
-  // }
 
   render() {
     return <div id="l-react-map"></div>
