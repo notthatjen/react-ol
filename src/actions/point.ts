@@ -27,7 +27,7 @@ class Point {
   private setIcon(point) {
     let { icon, label } = point
     label = this.sanitizeLabel(label)
-    // TODO: var name will identify the icon image
+
     const feature = new Style({
       image: new Icon({
         anchor: [0.5, 46],
@@ -44,7 +44,7 @@ class Point {
           lineJoin: 'round',
         }),
         fill: new Fill({
-            color: '#000'
+          color: '#000'
         }),
         backgroundFill: new Fill({
           color: '#FA9B00'
@@ -55,7 +55,7 @@ class Point {
   }
 
   setPoint(point) {
-    let { longitude, latitude  } = point
+    let { longitude, latitude } = point
     let center = fromLonLat([longitude, latitude])
     if (center) {
       const feature = new Feature({
@@ -74,14 +74,14 @@ class Point {
     let parsedPoints = [];
 
     // Reverse to re-adjust the z-index. first element will have the highest z-index when reversed :P
-    points.reverse().map( point => {
+    points.reverse().map(point => {
       let props = point.props;
       if (point.props.center) {
         if (point.props.useCurrentLocation) {
-          props = {...props, ...this.defaultLocation}
+          props = { ...props, ...this.defaultLocation }
         }
 
-        this.center = fromLonLat([ props.longitude, props.latitude ])
+        this.center = fromLonLat([props.longitude, props.latitude])
       }
       parsedPoints.push(this.setPoint(props))
     })

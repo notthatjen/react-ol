@@ -8,6 +8,7 @@ interface Props {
   icon:                string
   useCurrentLocation:  boolean
   label:               string
+  onClick:             void
 }
 
 class Point extends React.Component<Props> {
@@ -18,7 +19,8 @@ class Point extends React.Component<Props> {
     latitude:           0,
     center:             false,
     useCurrentLocation: false,
-    label: ""
+    label:              "",
+    onClick:            null
   }
 
   constructor(props) {
