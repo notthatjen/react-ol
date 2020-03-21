@@ -1,6 +1,5 @@
 import * as React from "react";
 
-
 interface Props {
   center:              boolean
   longitude:           number
@@ -13,7 +12,7 @@ interface Props {
 
 class Point extends React.Component<Props> {
 
-  static defaultProps: Props= {
+  static defaultProps: Props = {
     icon:               'Default',
     longitude:          0,
     latitude:           0,
