@@ -3158,10 +3158,10 @@ locate-path@^3.0.0:
     p-locate "^3.0.0"
     path-exists "^3.0.0"
 
-location-api@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/location-api/-/location-api-1.0.1.tgz#86562b8ccaecfddd9ddcc00358fb8dc3b788dc2e"
-  integrity sha512-+VCRQ6hx+tYEdAd0vDc40z+1M4aRKq8B9bzNdJ3UnivZrZXlkyrrAOoACCWQDVKr9HpIGAfP4AHg+GTNj8bj0Q==
+location-api@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/location-api/-/location-api-1.0.2.tgz#be731c4db436420574641052dfae1ca7a872cd3f"
+  integrity sha512-X+ZKdKd8n5edz5CRTdxwWoyFW567yJmkz7cEJUXDPhh/iCaclZbBf/Y6dwdB3uleHLqRccOiNPpuYutffz48tw==
   dependencies:
     "@types/react" "^16.9.19"
     "@types/react-dom" "^16.9.5"

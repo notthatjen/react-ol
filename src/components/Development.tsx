@@ -1,6 +1,7 @@
 import * as React from "react";
-import Map from './Map'
-import Point from './Point'
+// import Map from './Map'
+// import Point from './Point'
+import { Map, Point } from 'location-api'
 
 export default class Development extends React.Component<any, any> {
 
