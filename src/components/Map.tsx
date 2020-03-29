@@ -1,5 +1,4 @@
 import * as React from "react";
-import { usePosition } from 'use-position';
 import * as actions from '../actions';
 import * as ol from 'ol';
 import { fromLonLat } from 'ol/proj';
@@ -14,17 +13,9 @@ import Utils from '../utils'
 import '../css/ol.css';
 import '../css/geol.css';
 
-function usePositionWrapper(Component) {
-  return function Wrapped(props) {
-    let { longitude, latitude, error } = usePosition();
-    return <Component {...props} defaultLocation={!error && { longitude, latitude }} />
-  }
-}
-
 interface Props {
   zoom: number
   children: React.ReactNode
-  defaultLocation: any
 }
 
 class Map extends React.Component<Props> {
@@ -33,15 +24,24 @@ class Map extends React.Component<Props> {
   points: any[] = [];
   center: any[] = [0, 0];
   zoom: number = this.props.zoom || 13;
+  defaultLocation: any[];
 
   componentDidMount() {
 
     this.initiateMap()
+    this.getCurrentLocation()
   }
 
   componentDidUpdate() {
     this.parseChildren();
     this.initiateMap()
+  }
+
+  getCurrentLocation() {
+    if ( !navigator.geolocation ) return []
+    navigator.geolocation.getCurrentPosition((position) => {
+      this.defaultLocation = [ position.coords.longitude, position.coords.latitude ]
+    });
   }
 
   initiateMap() {
@@ -82,7 +82,7 @@ class Map extends React.Component<Props> {
     // Todo: Transfer this to utils
 
     let children: any = Utils.findAllChild(this.props.children)
-    let parsedPoints = new actions.Point({ points: children.points, defaultLocation: this.props.defaultLocation })
+    let parsedPoints = new actions.Point({ points: children.points, defaultLocation: this.defaultLocation })
 
 
     this.center = parsedPoints.center
@@ -97,4 +97,4 @@ class Map extends React.Component<Props> {
 
 
 
-export default usePositionWrapper(Map);
+export default Map;
