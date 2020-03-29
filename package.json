@@ -1,7 +1,7 @@
 {
   "name": "location-api",
   "version": "1.0.5-rc",
-  "main": "dist/app.min.js",
+  "main": "dist/bundle.umd.js",
   "module": "dist/index.js",
   "license": "MIT",
   "dependencies": {
@@ -34,6 +34,6 @@
   "scripts": {
     "start": "webpack-dev-server --mode development --content-base example --config example/webpack.config --open --hot",
     "build": "webpack --mode production",
-    "build:dev": "webpack --config example/webpack.config"
+    "build:dev": "webpack --mode development --config example/webpack.config"
   }
 }
