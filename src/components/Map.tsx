@@ -45,6 +45,7 @@ class Map extends React.Component<Props> {
   }
 
   initiateMap() {
+    console.log({props: this.props, default: this.defaultLocation})
     this.resetMap();
     let streetLayer = new TileLayer({
       source: new OSM()
