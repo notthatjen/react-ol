@@ -1,6 +1,6 @@
 {
   "name": "location-api",
-  "version": "1.0.4-a",
+  "version": "1.0.4-rc",
   "main": "dist/app.min.js",
   "module": "dist/index.js",
   "license": "MIT",
