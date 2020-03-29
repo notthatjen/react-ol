@@ -3158,6 +3158,18 @@ locate-path@^3.0.0:
     p-locate "^3.0.0"
     path-exists "^3.0.0"
 
+location-api@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/location-api/-/location-api-1.0.3.tgz#6544d788d10d3a506472b9c06cde4be9b341e3b1"
+  integrity sha512-8/hbkA6p0NiAufnYnYjL8v0mmLn58HLfxxNBd1kHmM2It+dMiiIp/JangGT4QEjf5Ny7xCkxJIrANPiIbrVmVw==
+  dependencies:
+    "@types/react" "^16.9.19"
+    "@types/react-dom" "^16.9.5"
+    react "^16.12.0"
+    react-dom "^16.12.0"
+    typescript "^3.7.5"
+    webpack "^4.41.5"
+
 lodash@4.17.4:
   version "4.17.4"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"

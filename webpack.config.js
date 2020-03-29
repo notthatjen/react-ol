@@ -9,9 +9,8 @@ module.exports = {
   },
   output: {
     path: path.join(__dirname, '/dist'),
-    filename: "app.umd.js",
+    filename: "app.min.js",
     library: ["location-api"],
-    libraryTarget: "umd"
   },
   module: {
     rules: [

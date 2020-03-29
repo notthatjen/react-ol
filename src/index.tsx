@@ -7,9 +7,3 @@ export {
     Map,
     Point
 }
-
-// import Development from "./components/Development";
-// ReactDOM.render(
-//     <Development  />,
-//     document.getElementById("root")
-// );
