@@ -1,6 +1,6 @@
 {
   "name": "location-api",
-  "version": "1.0.5-re",
+  "version": "1.0.5-rf",
   "main": "dist/bundle.umd.js",
   "module": "dist/index.js",
   "license": "MIT",
