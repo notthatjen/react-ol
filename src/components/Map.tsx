@@ -14,7 +14,7 @@ import '../css/ol.css';
 import '../css/geol.css';
 
 interface Props {
-  zoom: number
+  zoom?: string
   children: React.ReactNode
 }
 
@@ -23,29 +23,32 @@ class Map extends React.Component<Props> {
   map: ol.Map;
   points: any[] = [];
   center: any[] = [0, 0];
-  zoom: number = this.props.zoom || 13;
-  defaultLocation: any[];
+  zoom: string = this.props.zoom || "13";
+  defaultLocation: any[] = [0, 0];
 
   componentDidMount() {
-
-    this.initiateMap()
-    this.getCurrentLocation()
+    this.parseChildren();
+    this.initiateMap();
   }
 
   componentDidUpdate() {
     this.parseChildren();
-    this.initiateMap()
+    this.initiateMap();
   }
 
+
   getCurrentLocation() {
-    if ( !navigator.geolocation ) return []
-    navigator.geolocation.getCurrentPosition((position) => {
-      this.defaultLocation = [ position.coords.longitude, position.coords.latitude ]
+    if ( !navigator.geolocation ) {
+      console.log("geolocation not found")
+      return []
+    }
+
+    navigator.geolocation.getCurrentPosition((pos) => {
+      this.defaultLocation = [ pos.coords.longitude, pos.coords.latitude ]
     });
   }
 
   initiateMap() {
-    console.log({props: this.props, default: this.defaultLocation})
     this.resetMap();
     let streetLayer = new TileLayer({
       source: new OSM()
@@ -81,10 +84,9 @@ class Map extends React.Component<Props> {
 
   parseChildren() {
     // Todo: Transfer this to utils
-
+    if (!this.props.children) return
     let children: any = Utils.findAllChild(this.props.children)
     let parsedPoints = new actions.Point({ points: children.points, defaultLocation: this.defaultLocation })
-
 
     this.center = parsedPoints.center
     this.points = parsedPoints.points
@@ -94,8 +96,5 @@ class Map extends React.Component<Props> {
     return <div id="l-react-map"></div>
   }
 }
-
-
-
 
 export default Map;

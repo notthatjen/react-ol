@@ -5,7 +5,6 @@ import * as geom from 'ol/geom';
 import Feature from 'ol/Feature';
 import { fromLonLat } from 'ol/proj';
 
-
 class Point {
   public points: any;
   public center: any;

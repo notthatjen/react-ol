@@ -10,6 +10,13 @@ module.exports = {
     publicPath: '/build/',
     filename: "example.js",
   },
+  devtool: 'source-map',
+  resolve: {
+    extensions: ['.ts', '.js', '.tsx', '.json', '.css', '.html'],
+    alias: {
+      'GenerateMap': path.resolve(__dirname, '..', 'src', 'index') // FIXME: doesn't work
+    }
+  },
   module: {
     rules: [
       {
