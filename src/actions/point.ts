@@ -4,6 +4,8 @@ import { Icon, Style, Text, Fill, Stroke } from 'ol/style';
 import * as geom from 'ol/geom';
 import Feature from 'ol/Feature';
 import { fromLonLat } from 'ol/proj';
+import { HandPointDown } from '../images/image';
+
 
 class Point {
   public points: any;
@@ -32,7 +34,7 @@ class Point {
         anchor: [0.5, 46],
         anchorXUnits: 'fraction',
         anchorYUnits: 'pixels',
-        src: `/src/images/${icon}.png`
+        src: HandPointDown
       }),
       text: new Text({
         text: label,

@@ -18,8 +18,9 @@
       "components/*": [
         "src/components/*"
       ],
-    }
+    },
   },
+  "include": ["./src/types/index.d.ts"],
   "files": [
     "src/index.tsx",
   ],
