@@ -22,31 +22,48 @@ class Map extends React.Component<Props> {
 
   map: ol.Map;
   points: any[] = [];
-  center: any[] = [0, 0];
   zoom: string = this.props.zoom || "13";
-  defaultLocation: any[] = [0, 0];
+  currentLocation: any[] = [0, 0];
+  geolocation: ol.Geolocation;
+  view: ol.View;
+
 
   componentDidMount() {
-    this.parseChildren();
-    this.initiateMap();
+    this.getGeolocation()
   }
 
   componentDidUpdate() {
-    this.parseChildren();
-    this.initiateMap();
+    // this.parseChildren();
+    // this.initiateMap();
   }
 
+  getGeolocation() {
 
-  getCurrentLocation() {
-    if ( !navigator.geolocation ) {
-      console.log("geolocation not found")
-      return []
-    }
+    this.view = new ol.View({
+      center: [0, 0],
+      zoom: this.zoom
+    })
 
-    navigator.geolocation.getCurrentPosition((pos) => {
-      this.defaultLocation = [ pos.coords.longitude, pos.coords.latitude ]
+    this.geolocation = new ol.Geolocation({
+      trackingOptions: {
+        enableHighAccuracy: true
+      },
+      tracking: true,
+      projection: this.view.getProjection()
     });
+    this.geolocation.once('change', (evt) => {
+      let coords = this.geolocation.getPosition();
+      this.currentLocation = coords
+      this.parseChildren();
+      this.initiateMap();
+    })
+
+    this.geolocation.on('change:position', (evt) => {
+      this.view.setCenter(this.geolocation.getPosition())
+    })
+
   }
+
 
   initiateMap() {
     this.resetMap();
@@ -71,10 +88,7 @@ class Map extends React.Component<Props> {
         streetLayer,
         vectorsAndIcons
       ],
-      view: new ol.View({
-        center: this.center,
-        zoom: this.zoom
-      })
+      view: this.view
     });
   }
 
@@ -86,9 +100,8 @@ class Map extends React.Component<Props> {
     // Todo: Transfer this to utils
     if (!this.props.children) return
     let children: any = Utils.findAllChild(this.props.children)
-    let parsedPoints = new actions.Point({ points: children.points, defaultLocation: this.defaultLocation })
-
-    this.center = parsedPoints.center
+    let parsedPoints = new actions.Point({ points: children.points, currentLocation: this.currentLocation })
+    this.view.setCenter(parsedPoints.center)
     this.points = parsedPoints.points
   }
 
