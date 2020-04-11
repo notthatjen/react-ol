@@ -25,25 +25,17 @@ class Map extends React.Component<Props> {
   zoom: string = this.props.zoom || "13";
   currentLocation: any[] = [0, 0];
   geolocation: ol.Geolocation;
-  view: ol.View;
-
+  view: any = new ol.View({
+    center: [0, 0],
+    zoom: this.zoom
+  });
 
   componentDidMount() {
+    this.initiateMap()
     this.getGeolocation()
   }
 
-  componentDidUpdate() {
-    // this.parseChildren();
-    // this.initiateMap();
-  }
-
   getGeolocation() {
-
-    this.view = new ol.View({
-      center: [0, 0],
-      zoom: this.zoom
-    })
-
     this.geolocation = new ol.Geolocation({
       trackingOptions: {
         enableHighAccuracy: true
@@ -51,22 +43,28 @@ class Map extends React.Component<Props> {
       tracking: true,
       projection: this.view.getProjection()
     });
+
     this.geolocation.once('change', (evt) => {
       let coords = this.geolocation.getPosition();
-      this.currentLocation = coords
-      this.parseChildren();
-      this.initiateMap();
+      let center = this.view.getCenter()
+
+      if (JSON.stringify(center) == JSON.stringify([0, 0])) {
+        this.view.setCenter(coords)
+      }
+
+      this.initiateMap()
     })
 
     this.geolocation.on('change:position', (evt) => {
-      this.view.setCenter(this.geolocation.getPosition())
+
     })
 
   }
 
-
   initiateMap() {
     this.resetMap();
+    this.parseChildren();
+
     let streetLayer = new TileLayer({
       source: new OSM()
     })
@@ -100,7 +98,7 @@ class Map extends React.Component<Props> {
     // Todo: Transfer this to utils
     if (!this.props.children) return
     let children: any = Utils.findAllChild(this.props.children)
-    let parsedPoints = new actions.Point({ points: children.points, currentLocation: this.currentLocation })
+    let parsedPoints = new actions.Point({ points: children.points, currentLocation: this.view.getCenter() })
     this.view.setCenter(parsedPoints.center)
     this.points = parsedPoints.points
   }

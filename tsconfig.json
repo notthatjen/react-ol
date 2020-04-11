@@ -20,11 +20,14 @@
       ],
     },
   },
-  "include": ["./src/types/index.d.ts"],
+  "include": [
+    "./src/types/index.d.ts"
+  ],
   "files": [
     "src/index.tsx",
   ],
   "exclude": [
     "node_modules"
   ],
+  "resolveJsonModule": true
 }

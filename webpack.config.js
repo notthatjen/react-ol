@@ -19,11 +19,15 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        loader: [ 'style-loader', 'css-loader' ]
+        loader: ['style-loader', 'css-loader']
       },
       {
         test: /\.(png|svg|jpg|gif)$/,
-        loader: [ 'file-loader', 'image-webpack-loader' ]
+        loader: ['file-loader', 'image-webpack-loader']
+      },
+      {
+        test: /\.json$/,
+        loader: 'json-loader'
       }
     ]
   },

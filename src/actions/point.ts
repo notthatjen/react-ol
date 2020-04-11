@@ -5,7 +5,8 @@ import * as geom from 'ol/geom';
 import Feature from 'ol/Feature';
 import { fromLonLat } from 'ol/proj';
 import { getIcon } from '../images/image';
-
+import Utils from '../utils';
+import t from '../translations'
 
 class Point {
   public points: any;
@@ -58,7 +59,7 @@ class Point {
   setPoint(point) {
     let { longitude, latitude } = point
     let center = point.currentLocation || fromLonLat([longitude, latitude]) //fromLonLat([longitude, latitude])
-    console.log(center)
+
     if (center) {
       const feature = new Feature({
         geometry: new geom.Point(center),
@@ -86,15 +87,11 @@ class Point {
           this.center = fromLonLat([props.longitude, props.latitude])
         }
       }
-      console.log(props)
       parsedPoints.push(this.setPoint(props))
     })
 
     this.points = parsedPoints;
-
-    if (!this.center) throw new Error(
-      '404 Not Found: Center point is required e.g. <Point center />'
-    )
+    if (!this.center) Utils.returnError(t('errors.noCenter'))
   }
 
 }

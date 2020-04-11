@@ -5,7 +5,7 @@ class Utils {
   static findAllChild(children) {
     let result = {}
 
-    if (children && !Array.isArray(children)) children = [ children ]
+    if (children && !Array.isArray(children)) children = [children]
 
     children.map(child => {
       if (child.type) {
@@ -21,6 +21,10 @@ class Utils {
 
     return result
 
+  }
+
+  static returnError(message) {
+    throw new Error(message)
   }
 }
 
