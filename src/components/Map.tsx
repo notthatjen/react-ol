@@ -51,12 +51,11 @@ class Map extends React.Component<Props> {
       if (JSON.stringify(center) == JSON.stringify([0, 0])) {
         this.view.setCenter(coords)
       }
-
       this.initiateMap()
     })
 
     this.geolocation.on('change:position', (evt) => {
-
+      // for tracking
     })
 
   }
