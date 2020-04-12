@@ -27,6 +27,8 @@ import SunCloud from './suncloud.png'
 import Taxi from './taxi.png'
 import Toilet from './toilet.png'
 import TrafficLight from './trafficlight.png'
+import OfficeMan from './officeman.png'
+import OfficeWoman from './officewoman.png'
 
 
 const getIcon = (name) => {
@@ -87,6 +89,10 @@ const getIcon = (name) => {
       return Toilet;
     case "TrafficLight":
       return TrafficLight;
+    case "OfficeMan":
+      return OfficeMan;
+    case "OfficeWoman":
+      return OfficeWoman;
     default:
       return Default;
   }
